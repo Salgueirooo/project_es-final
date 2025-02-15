@@ -8,13 +8,13 @@ interface ModalProps {
     type?: "max" | "min";
 }
 
-const Modal: React.FC<ModalProps> = ({ isOpen, onClose, children, type }) => {  
+const Modal: React.FC<ModalProps> = ({ isOpen, onClose, children}) => {  
 
     if (!isOpen) return null;
     
     return (
-        <div className={`modal ${type}`}>
-            <div className={`modal-content ${type}`}>
+        <div className="modal">
+            <div className="modal-content">
                 <button className="close-bot" onClick={onClose}><RxCross2 /></button>
                 {children}
             </div>

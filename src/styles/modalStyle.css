@@ -1,4 +1,4 @@
-.modal.max {
+.modal {
   position: fixed;
   top: 0;
   left: 0;
@@ -9,26 +9,12 @@
   display: flex;
   align-items: center;
   justify-content: center;
-  z-index: 1000; /* Fica acima de tudo */
-}
-
-.modal.min {
-  position: fixed;
-  top: 0;
-  left: 0;
-  width: 100vw;
-  height: 100vh;
-  color: #ffffff;
-  background: rgba(0, 0, 0, 0.5); /* Fundo escuro semi-transparente */
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  z-index: 1000; /* Fica acima de tudo */
+  z-index: 999; /* Fica acima de tudo */
 }
   
-.modal-content.max {
+.modal-content {
   background: #1d2027;
-  padding: 0vh 0vw 0vh 0vw;
+  padding: 1.5vh 0vw 0vh 0vw;
   border-radius: 8px;
   width: 50vw;
 
@@ -38,19 +24,6 @@
   /* text-align: center; */
   position: relative;
   /* overflow-y: auto; */
-}
-
-.modal-content.min {
-  background: #1d2027;
-  padding: 1.5vh 0vw 5vh 0vw;
-  border-radius: 8px;
-  width: 50vw;
-  height: 70vh;
-  /* height: 700px; */
-  box-shadow: 0px 5px 10px rgba(0, 0, 0, 0.3);
-  /* text-align: center; */
-  position: relative;
-  overflow-y: auto;
 }
 
 .close-bot {
@@ -254,7 +227,7 @@
 textarea {
   padding: 1vh 1vw 1vh 1vw;
   height: 10vh;
-  width: 16.6vw;
+  width: 20.6vw;
   border: 2px solid;
   border-radius: 5px;
   background-color: var(--cinzento-claro);
@@ -282,3 +255,73 @@ textarea {
   text-align: center;
 }
 
+option {
+  font-weight: bold;
+}
+
+.form3 {
+  width: 100%;
+  height: 14vh;
+  display: flex;
+  flex-direction:column;
+  /* align-items: center; */
+  /* justify-content: center; */
+  
+}
+
+.botSubmit2 {
+  /* margin-top: 4vh; */
+  color-scheme: dark;
+  border-radius: 5px;
+  width: 18vh;
+  height: 5.5vh;
+  border: 1px solid transparent;
+  font-size: 2vh;
+  font-weight: bold;
+  font-family: inherit;
+  background-color: var(--cor-principal);
+  cursor: pointer;
+}
+
+.colRev1, .colRev2 {
+  display: flex;
+  justify-content: space-between; 
+  align-items: center; /* Alinha verticalmente os itens */
+  /* gap: 0vh; */
+  width: 100%; /* Ocupa toda a largura disponível */
+  padding-bottom: 2vh;
+}
+
+.clasRevLabel {
+  width: 12vw;
+  height: 5vh;
+  padding-left: 1vh;
+  border: 2px solid;
+  border-radius: 5px;
+  background-color: var(--cinzento-claro);
+  border-color: var(--cor-principal);
+  font-size: 1.7vh;
+}
+
+.typeRevLabel {
+  width: 14vw;
+  height: 5.6vh;
+  /* padding-left: 1vh; */
+  padding: 1vh 0vw 1vh 1vh;
+  border: 2px solid;
+  border-radius: 5px;
+  background-color: var(--cinzento-claro);
+  border-color: var(--cor-principal);
+  font-size: 1.7vh;
+}
+
+.commentLabel {
+  width: 100%;
+  height: 4.5vh;
+  padding-left: 1vh;
+  border: 2px solid;
+  border-radius: 5px;
+  background-color: var(--cinzento-claro);
+  border-color: var(--cor-principal);
+  font-size: 1.7vh;
+}

@@ -12,6 +12,7 @@ import { ClassesDto } from "../dto/ClassesDTO";
 import { useAttendance, useAttendances, updateAttendance } from "../hooks/attendanceHook";
 import { BarChart, Bar, XAxis, YAxis, Tooltip, Legend, ResponsiveContainer } from "recharts";
 import { statsAttendace, useNStudents, useAttendPerClass } from "../hooks/statsHook";
+import { createReview } from "../hooks/reviewHook";
 
 interface ShowClassesProps {
     curricularUnitSelected: number;
@@ -24,10 +25,13 @@ const ShowClasses: React.FC<ShowClassesProps> = ({ curricularUnitSelected, nameU
     
     const { userId } = useUserId();
     
+    const [studentId, setStudentId] = useState(0);
+
     const [isModalInfoOpen, setIsModalInfoOpen] = useState(false);
     const [isModalEditOpen, setIsModalEditOpen] = useState(false);
     const [isModalAddOpen, setIsModalAddOpen] = useState(false);
     const [isModalStatOpen, setIsModalStatOpen] = useState(false);
+    const [isModalReviewOpen, setIsModalReviewOpen] = useState(false);
     
     const { decodedToken, error: tokenError } = useToken();
     const isAdmin: boolean = decodedToken?.role?.includes("ROLE_ADMIN");
@@ -49,7 +53,11 @@ const ShowClasses: React.FC<ShowClassesProps> = ({ curricularUnitSelected, nameU
     const [editDate, setEditDate] = useState('');
     const [editTime, setEditTime] = useState('');
 
-    const horario = classeSelected?.dateTime ? classeSelected.dateTime.split(' ') : []; 
+    const [classifReview, setClassifReview] = useState('');
+    const [commentReview, setCommentReview] = useState('');
+    const [idReview, setIdReview] = useState('');
+
+    const horario = classeSelected?.dateTime ? classeSelected.dateTime.split(' ') : [];
 
     const data = [
         { name: "Janeiro", valor: 0 },
@@ -58,11 +66,25 @@ const ShowClasses: React.FC<ShowClassesProps> = ({ curricularUnitSelected, nameU
         { name: "Abril", valor: 0 }
     ];
 
+    const reviews = [
+        {id: "AUTONOMIA", name: "Autonomia", description: "Capacidade do aluno de tomar iniciativas e resolver problemas sem depender constantemente do professor"},
+        {id: "COMPORTAMENTO", name: "Comportamento", description: "Atitude e respeito do aluno em relação ao professor e aos colegas durante as aulas"},
+        {id: "INTERVENCOES", name: "Intervenções", description: "Qualidade e pertinência das contribuições do aluno nas discussões em aula"},
+        {id: "PARTICIPACAO", name: "Participação", description: "Presença do aluno nas atividades e discussões de forma ativa e colaborativa"},
+        {id: "CRIATIVIDADE", name: "Criatividade", description: "Capacidade do aluno de apresentar ideias originais e soluções inovadoras durante as atividades"}
+    ];
+
     const resetDataClass = () => {
         setSummary("");
         setDate("");
         setTime("");
     };
+
+    const resetDataReview = () => {
+        setClassifReview('');
+        setCommentReview('');
+        setIdReview('');
+    }
 
     const handleAddSubmit = (e: React.FormEvent) => {
         e.preventDefault();
@@ -74,6 +96,13 @@ const ShowClasses: React.FC<ShowClassesProps> = ({ curricularUnitSelected, nameU
         e.preventDefault();
         updateClasse(curricularUnitSelected, classeSelected?.id ? classeSelected.id : 0, editDate, editTime, editSummary, refreshClasses);
         setIsModalEditOpen(false);
+    };
+
+    const handleAddReviewSubmit = (e: React.FormEvent) => {
+        e.preventDefault();
+        createReview(curricularUnitSelected, classeSelected?.id? classeSelected.id : 0, studentId, classifReview, 
+            commentReview, idReview/*refreshClasses*/);
+        setIsModalAddOpen(false);
     };
 
     return (
@@ -158,7 +187,7 @@ const ShowClasses: React.FC<ShowClassesProps> = ({ curricularUnitSelected, nameU
                 {errorClasses && <h5 className='error'>{errorClasses}</h5>}
             </div>
 
-            <Modal isOpen={isModalInfoOpen} onClose={() => setIsModalInfoOpen(false)} type="max">
+            <Modal isOpen={isModalInfoOpen} onClose={() => setIsModalInfoOpen(false)}>
                 
                 <div className="zonaInfo">
                     <h2 className="titModal">Detalhes sobre a Aula n.º {nClasseSelected}</h2>
@@ -202,9 +231,18 @@ const ShowClasses: React.FC<ShowClassesProps> = ({ curricularUnitSelected, nameU
                                             <td className="nameStudent">{student.name}</td>
                                             {new Date(classeSelected?.dateTime.replace(" ", "T")?classeSelected?.dateTime.replace(" ", "T"):'') < new Date() && (
                                                 <>
-                                                     <td className="buttonsStud">
-                                                        <button className="botFact"><GrCompliance /></button>
-                                                     </td>
+                                                    <td className="buttonsStud">
+                                                        <button className="botFact"
+                                                        onClick={() => {
+                                                            if (student.state) {
+                                                                setIsModalReviewOpen(true);
+                                                                resetDataReview();
+                                                                setStudentId(student.id);
+                                                            } else {
+                                                                alert("Os factos deste aluno não podem ser listados visto que um aluno ausente não possui factos.");
+                                                            }
+                                                        }}><GrCompliance /></button>
+                                                    </td>
                                                     <td className="buttonsStud">
                                                         <button className={student.state?"botAttend-true":"botAttend-false"}
                                                         onClick={() => (
@@ -226,8 +264,8 @@ const ShowClasses: React.FC<ShowClassesProps> = ({ curricularUnitSelected, nameU
                 </div>
             </Modal>
 
-            <Modal isOpen={isModalEditOpen} onClose={() => setIsModalEditOpen(false)} type="max">
-            <div className="zonaInfo">
+            <Modal isOpen={isModalEditOpen} onClose={() => setIsModalEditOpen(false)}>
+                <div className="zonaInfo">
                     <h2 className="titModal">Editar informações da aula n.º{nClasseSelected}</h2>
                     <form onSubmit={handleEditSubmit} className="form2">
                         <input className="loginLabel"
@@ -260,7 +298,7 @@ const ShowClasses: React.FC<ShowClassesProps> = ({ curricularUnitSelected, nameU
                 </div>
             </Modal>
 
-            <Modal isOpen={isModalAddOpen} onClose={() => setIsModalAddOpen(false)} type="max">
+            <Modal isOpen={isModalAddOpen} onClose={() => setIsModalAddOpen(false)}>
                 <div className="zonaInfo">
                     <h2 className="titModal">Adicionar aula à Unidade Curricular</h2>
 
@@ -297,7 +335,7 @@ const ShowClasses: React.FC<ShowClassesProps> = ({ curricularUnitSelected, nameU
                 </div>
             </Modal>
 
-            <Modal isOpen={isModalStatOpen} onClose={() => setIsModalStatOpen(false)} type="max">
+            <Modal isOpen={isModalStatOpen} onClose={() => setIsModalStatOpen(false)}>
                 <div className="zonaInfo">
                     <h2 className="titModal">Estatísticas Globais</h2>
                     
@@ -333,12 +371,66 @@ const ShowClasses: React.FC<ShowClassesProps> = ({ curricularUnitSelected, nameU
                             </div>
                             
                         }
-                        
-                        <div>
-
-                        </div>
                     </div>
                     
+                </div>
+            </Modal>
+            <Modal isOpen={isModalReviewOpen} onClose={() => setIsModalReviewOpen(false)}>
+                <div className="zonaInfo">
+                    <h2 className="titModal">Factos do Aluno</h2>
+                    <form className="form3" onSubmit={handleAddReviewSubmit}>
+                        <div className="colRev1">
+                            <input
+                                className="clasRevLabel"
+                                type="number"
+                                id="numberInput"
+                                value={classifReview}
+                                onChange={(e) => {
+                                    const value = e.target.value;
+                                    if (value === "" || (Number(value) >= 0 && Number(value) <= 5)) {
+                                    setClassifReview(value);
+                                    }
+                                }}
+                                required
+                                min="0"
+                                max="5"
+                                placeholder="Avaliação (0 a 5)"
+                            />
+                            <select
+                                className="typeRevLabel"
+                                id="reviewSelect"
+                                value={idReview}
+                                onChange={(e) => setIdReview(e.target.value)}
+                                required
+                                >
+                                <option value="" disabled>Selecione uma Categoria</option>
+                                {reviews.map((review, index) => (
+                                    <option key={review.id} value={index + 1}>
+                                    {review.name}
+                                    </option>
+                                ))}
+                            </select>
+                            <button type="submit" className="botSubmit2">Criar facto</button>
+                        </div>
+                        <div className="colRev2">
+                            <textarea
+                                className="commentLabel"
+                                id="comment"
+                                placeholder="Comentário"
+                                value={commentReview}
+                                onChange={(e) => setCommentReview(e.target.value)}
+                                maxLength={254}
+                                rows={4} // Define o número de linhas visíveis
+                                cols={50} // (Opcional) Define a largura do textarea
+                                style={{ resize: "vertical" }} // Permite redimensionar verticalmente
+                            />
+                        </div>
+                    </form>
+                    <h2 className="listFactos"></h2>
+                    
+                    <div className="">
+                        
+                    </div>
                 </div>
             </Modal>
         </div>
