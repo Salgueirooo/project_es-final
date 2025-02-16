@@ -12,7 +12,8 @@ import { ClassesDto } from "../dto/ClassesDTO";
 import { useAttendance, useAttendances, updateAttendance } from "../hooks/attendanceHook";
 import { BarChart, Bar, XAxis, YAxis, Tooltip, Legend, ResponsiveContainer } from "recharts";
 import { statsAttendace, useNStudents, useAttendPerClass } from "../hooks/statsHook";
-import { createReview } from "../hooks/reviewHook";
+import { createReview, useAllReviews, useReviews } from "../hooks/reviewHook";
+import { UserDto } from "../dto/UsersDTO";
 
 interface ShowClassesProps {
     curricularUnitSelected: number;
@@ -25,7 +26,7 @@ const ShowClasses: React.FC<ShowClassesProps> = ({ curricularUnitSelected, nameU
     
     const { userId } = useUserId();
     
-    const [studentId, setStudentId] = useState(0);
+    const [student, setStudent] = useState<UserDto | null>(null);
 
     const [isModalInfoOpen, setIsModalInfoOpen] = useState(false);
     const [isModalEditOpen, setIsModalEditOpen] = useState(false);
@@ -45,6 +46,9 @@ const ShowClasses: React.FC<ShowClassesProps> = ({ curricularUnitSelected, nameU
     const { nStudents, error: errorNStud, fetchNStudents } = useNStudents();
     const { attendancesPerClass, error: errorAttend, fetchAttendPClass } = useAttendPerClass();
     
+    const { reviews, error: errorReviews, refreshReviews } = useReviews(classeSelected?.id? classeSelected.id : null);
+    const { allReviews, error: errorAllRev, fetchReviewsByClassId } = useAllReviews();
+
     const [summary, setSummary] = useState("");
     const [date, setDate] = useState('');
     const [time, setTime] = useState('');
@@ -66,7 +70,7 @@ const ShowClasses: React.FC<ShowClassesProps> = ({ curricularUnitSelected, nameU
         { name: "Abril", valor: 0 }
     ];
 
-    const reviews = [
+    const reviewsType = [
         {id: "AUTONOMIA", name: "Autonomia", description: "Capacidade do aluno de tomar iniciativas e resolver problemas sem depender constantemente do professor"},
         {id: "COMPORTAMENTO", name: "Comportamento", description: "Atitude e respeito do aluno em relação ao professor e aos colegas durante as aulas"},
         {id: "INTERVENCOES", name: "Intervenções", description: "Qualidade e pertinência das contribuições do aluno nas discussões em aula"},
@@ -100,8 +104,9 @@ const ShowClasses: React.FC<ShowClassesProps> = ({ curricularUnitSelected, nameU
 
     const handleAddReviewSubmit = (e: React.FormEvent) => {
         e.preventDefault();
-        createReview(curricularUnitSelected, classeSelected?.id? classeSelected.id : 0, studentId, classifReview, 
-            commentReview, idReview/*refreshClasses*/);
+        createReview(curricularUnitSelected, classeSelected?.id? classeSelected.id : 0, student?.id? student.id : 0, classifReview, 
+            commentReview, idReview, refreshReviews);
+        resetDataReview();
         setIsModalAddOpen(false);
     };
 
@@ -109,8 +114,16 @@ const ShowClasses: React.FC<ShowClassesProps> = ({ curricularUnitSelected, nameU
         <div className="areaClasses">
             <h3 className='titClasses'>Unidade Curricular de {nameUnitSelected}</h3>
             
-            <button className="botEstat" onClick={() => (setIsModalStatOpen(true), fetchStats(curricularUnitSelected, isAdmin), 
-            fetchNStudents(curricularUnitSelected), fetchAttendPClass(curricularUnitSelected))}>Estatísticas</button>
+            <button className="botEstat" onClick={() => {
+                setIsModalStatOpen(true); 
+                fetchStats(curricularUnitSelected, isAdmin);
+                if(isAdmin){
+                    fetchNStudents(curricularUnitSelected);
+                    fetchAttendPClass(curricularUnitSelected);
+                } else {
+                    fetchReviewsByClassId(curricularUnitSelected);
+                }
+            }}>Estatísticas</button>
 
             {isAdmin && (
                 <button className="botAddClasse" onClick={() => (setIsModalAddOpen(true), resetDataClass())}><FaPlus /></button>
@@ -143,12 +156,14 @@ const ShowClasses: React.FC<ShowClassesProps> = ({ curricularUnitSelected, nameU
                                         setIsModalInfoOpen(true); 
                                         setClasseSelect(classe); 
                                         setnClasseSelected(classNumber+1);
-                                        refreshAttendance(); 
                                         //setidClasseSelected(classe.id);
                                         if (!isAdmin) {
                                             if (classe.dateTime && new Date(classe.dateTime.replace(" ", "T")) <= new Date()) {
                                                 fetchAttendance(curricularUnitSelected, classe.id, userId);
+                                                refreshReviews();
                                             }
+                                        } else {
+                                            refreshAttendance(); 
                                         }
                                 }}><RxInfoCircled /></button>
                             </td>
@@ -206,6 +221,34 @@ const ShowClasses: React.FC<ShowClassesProps> = ({ curricularUnitSelected, nameU
                         </>
                     )}
                     <p className="summary"><b>Sumário: </b>{classeSelected?.summary}</p>
+                    {/* <h2 className="listFactos"></h2> */}
+                    {!isAdmin && (
+                        <>
+                            <h2 className="listFactos"></h2>
+                    
+                            <div className="divTable4">
+                                <table className="factsTable">
+                                <thead>
+                                    <tr>
+                                        <th>Avaliação</th>
+                                        <th>Comentário</th>
+                                        <th>Categoria</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    {reviews.map((review) => (
+                                        <tr key={review.id}>
+                                            
+                                            <td className="classifRev">{review.value}</td>
+                                            <td className="commentRev">{review.comment}</td>
+                                            <td className="typeRev">{review.participationType}</td>
+                                        </tr>
+                                    ))}
+                                </tbody>
+                                </table>
+                            </div>
+                        </>
+                    )}
                     {isAdmin && (
                         <div className="zonaInfo2">
                             <h2 className="subTitModal">Lista de alunos</h2>
@@ -237,7 +280,8 @@ const ShowClasses: React.FC<ShowClassesProps> = ({ curricularUnitSelected, nameU
                                                             if (student.state) {
                                                                 setIsModalReviewOpen(true);
                                                                 resetDataReview();
-                                                                setStudentId(student.id);
+                                                                setStudent(student);
+                                                                refreshReviews();
                                                             } else {
                                                                 alert("Os factos deste aluno não podem ser listados visto que um aluno ausente não possui factos.");
                                                             }
@@ -337,16 +381,52 @@ const ShowClasses: React.FC<ShowClassesProps> = ({ curricularUnitSelected, nameU
 
             <Modal isOpen={isModalStatOpen} onClose={() => setIsModalStatOpen(false)}>
                 <div className="zonaInfo">
-                    <h2 className="titModal">Estatísticas Globais</h2>
+                    <h2 className="titModal">Estatísticas da Unidade Curricular</h2>
                     
                     <div className="zonaStats">
                         {!isAdmin &&
-                            <div>
-                                <p><b>Aulas assistidas: </b>
+                            <>
+                                <p style={{ paddingLeft: "8px" }}><b>Aulas assistidas: </b>
                                     {stats?.attended}/{stats?.total} ({((stats?.attended?stats?.attended:0)/
                                     (stats?.total?stats.total:0)*100).toFixed(2)}%)</p>
-                                <h2 className="listFactos"></h2>
-                            </div>
+                                <h2 className="titReviews">Factos</h2>
+                                <div className="reviewsByClass">
+                                    {allReviews.map((reviewClass, index) => (
+                                        <div key={reviewClass.classId}>
+                                            <h3>Aula {index + 1}</h3>
+                                            <div style={{paddingLeft: "1vw", paddingRight: "1vw"}}>
+                                                <table className="factsTable2">
+                                            {reviewClass.reviews.length > 0 && ( // Só mostra o cabeçalho se houver reviews
+                                                <thead>
+                                                <tr>
+                                                    <th>Avaliação</th>
+                                                    <th>Comentário</th>
+                                                    <th>Categoria</th>
+                                                </tr>
+                                                </thead>
+                                            )} 
+                                            <tbody>
+                                            {reviewClass.reviews.map((facto) => (
+                                                    <tr key={facto.id}>
+                                                        
+                                                        <td className="classifRev">{facto.value}</td>
+                                                        <td className="commentRev">{facto.comment}</td>
+                                                        <td className="typeRev">{facto.participationType}</td>
+                                                    </tr>
+                                                ))}
+                                            </tbody>
+                                            </table>
+                                            </div>
+                                            
+                                            {/* <ul>
+                                                {reviewClass.reviews.map((facto) => (
+                                                    <li key={facto.id}>{facto.value} - {facto.comment} - {facto.participationType}</li>
+                                                ))}
+                                            </ul> */}
+                                        </div>
+                                    ))}
+                                </div>
+                            </>
                         }
                         
                         {isAdmin &&
@@ -377,7 +457,7 @@ const ShowClasses: React.FC<ShowClassesProps> = ({ curricularUnitSelected, nameU
             </Modal>
             <Modal isOpen={isModalReviewOpen} onClose={() => setIsModalReviewOpen(false)}>
                 <div className="zonaInfo">
-                    <h2 className="titModal">Factos do Aluno</h2>
+                    <h2 className="titModal">Factos do aluno <i>{student?.name.split(' ')[0]}</i></h2>
                     <form className="form3" onSubmit={handleAddReviewSubmit}>
                         <div className="colRev1">
                             <input
@@ -388,7 +468,7 @@ const ShowClasses: React.FC<ShowClassesProps> = ({ curricularUnitSelected, nameU
                                 onChange={(e) => {
                                     const value = e.target.value;
                                     if (value === "" || (Number(value) >= 0 && Number(value) <= 5)) {
-                                    setClassifReview(value);
+                                        setClassifReview(value);
                                     }
                                 }}
                                 required
@@ -404,7 +484,7 @@ const ShowClasses: React.FC<ShowClassesProps> = ({ curricularUnitSelected, nameU
                                 required
                                 >
                                 <option value="" disabled>Selecione uma Categoria</option>
-                                {reviews.map((review, index) => (
+                                {reviewsType.map((review, index) => (
                                     <option key={review.id} value={index + 1}>
                                     {review.name}
                                     </option>
@@ -416,7 +496,7 @@ const ShowClasses: React.FC<ShowClassesProps> = ({ curricularUnitSelected, nameU
                             <textarea
                                 className="commentLabel"
                                 id="comment"
-                                placeholder="Comentário"
+                                placeholder="Insira um comentário (opcional)"
                                 value={commentReview}
                                 onChange={(e) => setCommentReview(e.target.value)}
                                 maxLength={254}
@@ -428,8 +508,26 @@ const ShowClasses: React.FC<ShowClassesProps> = ({ curricularUnitSelected, nameU
                     </form>
                     <h2 className="listFactos"></h2>
                     
-                    <div className="">
-                        
+                    <div className="divTable4">
+                        <table className="factsTable">
+                        <thead>
+                            <tr>
+                                <th>Avaliação</th>
+                                <th>Comentário</th>
+                                <th>Categoria</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {reviews.map((review) => (
+                                <tr key={review.id}>
+                                    
+                                    <td className="classifRev">{review.value}</td>
+                                    <td className="commentRev">{review.comment}</td>
+                                    <td className="typeRev">{review.participationType}</td>
+                                </tr>
+                            ))}
+                        </tbody>
+                        </table>
                     </div>
                 </div>
             </Modal>
