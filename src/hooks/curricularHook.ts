@@ -1,6 +1,7 @@
 import { useState, useEffect } from 'react';
 import axios from 'axios';
 import { CurricularUnitDto } from '../dto/CurricularUnitDTO';
+import api from '../services/api';
 
 const useCurricularUnits = () => {
     const [curricularUnits, setCurricularUnits] = useState<CurricularUnitDto[]>([]);
@@ -8,14 +9,15 @@ const useCurricularUnits = () => {
 
     useEffect(() => {
 
-        axios
-        .get(`http://localhost:8080/api/curricular-units/session`, {
+        api
+        .get(`/curricular-units/session`, {
             headers: {
             Authorization: `Bearer ${localStorage.getItem("token")}`,
             },
         })
         .then((response) => {
             setCurricularUnits(response.data);
+            setError(null);
         })
         .catch(() => {
             setError('Erro ao listar Unidades Curriculares.');

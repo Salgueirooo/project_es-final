@@ -1,47 +1,26 @@
 import { useState, useEffect } from 'react';
 import axios from 'axios';
 import { UserDto } from '../dto/UsersDTO';
-
-//falta trocar o url
-// const useAttendance = (ucId: number, classId: number, userId: number) => {
-//     const [attendance, setAttendance] = useState<boolean>(false);
-//     const [error, setError] = useState<string | null>(null);
-
-//     useEffect(() => {
-
-//         axios
-//         .get(`http://localhost:8080/api/attendance/get/${ucId}/${classId}/${userId}`, {
-//             headers: {
-//             Authorization: `Bearer ${localStorage.getItem("token")}`,
-//             },
-//         })
-//         .then((response) => {
-//             setAttendance(response.data);
-//         })
-//         .catch(() => {
-//             setError('Error fetching curricular units.');
-//         });
-//     }, [ucId]);
-
-//     return { attendance, error };
-// };
+import api from '../services/api';
 
 const useAttendance = () => {
     const [attendance, setAttendance] = useState<boolean | null>(null);
     const [error, setError] = useState<string | null>(null);
   
-    const fetchAttendance = (ucId: number, classId: number, userId: number) => {
-        axios
-        .get(`http://localhost:8080/api/attendance/get/${ucId}/${classId}/${userId}`, {
+    const fetchAttendance = (ucId: number, classId: number) => {
+        
+        api
+        .get(`/attendance/get/${ucId}/${classId}`, {
             headers: {
                 Authorization: `Bearer ${localStorage.getItem("token")}`,
             },
         })
         .then((response) => {
             setAttendance(response.data);
+            setError(null);
         })
         .catch(() => {
-            setError('Erro ao listar presenças.');
+            setError("Erro ao listar presença.");
         });
     };
 
@@ -55,8 +34,8 @@ const useAttendances = (classId: number | null) => {
 
     const fetchAttendance = async (classId: number) => {
         try {
-            const response = await axios.get(
-                `http://localhost:8080/api/attendance/get-all-from-class/${classId}`,
+            const response = await api.get(
+                `/attendance/get-all-from-class/${classId}`,
                 {
                     headers: {
                         Authorization: `Bearer ${localStorage.getItem("token")}`,
@@ -64,9 +43,10 @@ const useAttendances = (classId: number | null) => {
                 }
             );
             setAttendance(response.data);
+            setError(null);
         } catch (error) {
             console.error("Error fetching attendance:", error);
-            setError("Error fetching attendance");
+            setError("Erro ao listar presenças.");
         }
     };
 
@@ -85,8 +65,8 @@ const useAttendances = (classId: number | null) => {
 };
 
 const updateAttendance = (ucId: number, classId: number, userId: number, refreshAttendance: () => void) => {
-    axios.put(
-        `http://localhost:8080/api/attendance/set/${ucId}/${classId}/${userId}`,
+    api.put(
+        `/attendance/set/${ucId}/${classId}/${userId}`,
         {},
         {
             headers: {
@@ -95,10 +75,10 @@ const updateAttendance = (ucId: number, classId: number, userId: number, refresh
         }
     )
     .then(() => {
-        console.log("Attendance updated!");
         refreshAttendance();
     })
     .catch(() => {
+        alert("Ocorreu um erro ao atualizar presença do aluno.");
         console.error("Error updating attendance.");
     });
 };

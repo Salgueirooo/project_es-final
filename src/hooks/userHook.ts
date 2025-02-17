@@ -2,6 +2,7 @@ import { useState, useEffect } from 'react';
 import axios from 'axios';
 //import { CurricularUnitDto } from '../dto/CurricularUnitDTO';
 import { UserDto } from '../dto/UsersDTO';
+import api from '../services/api';
 
 const useUsername = () => {
     const [username, setUsername] = useState<string>();
@@ -9,8 +10,8 @@ const useUsername = () => {
 
     useEffect(() => {
 
-        axios
-        .get(`http://localhost:8080/api/users/user-name`, {
+        api
+        .get(`/users/user-name`, {
             headers: {
             Authorization: `Bearer ${localStorage.getItem("token")}`,
             },
@@ -32,8 +33,8 @@ const useUserId = () => {
 
     useEffect(() => {
 
-        axios
-        .get(`http://localhost:8080/api/users/user-id`, {
+        api
+        .get(`/users/user-id`, {
             headers: {
             Authorization: `Bearer ${localStorage.getItem("token")}`,
             },

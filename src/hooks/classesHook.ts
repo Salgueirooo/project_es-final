@@ -1,6 +1,7 @@
 import { useState, useEffect } from 'react';
 import axios from 'axios';
 import { ClassesDto } from '../dto/ClassesDTO';
+import api from '../services/api';
 
 const useClasses = (unitId: number | null) => {
     const [classes, setClasses] = useState<ClassesDto[]>([]);
@@ -9,14 +10,13 @@ const useClasses = (unitId: number | null) => {
 
     const fetchClassesByCurricularUnitId = async (unitId: number) => {
         try {
-          const response = await axios.get(`http://localhost:8080/api/classes/all/${unitId}`, {
+          const response = await api.get(`/classes/all/${unitId}`, {
             headers: {
               Authorization: `Bearer ${localStorage.getItem("token")}`,
             },
           });
           setClasses(response.data);
           setError(null);
-          //setIsClassesPopupOpen(true); // Open the popup after fetching the data
         } catch (error) {
           console.error("Error fetching classes:", error);
           setError('Erro ao listar as aulas');
@@ -38,10 +38,11 @@ const useClasses = (unitId: number | null) => {
 };
 
 const createClasse = (ucId: number, date: string, time:string, summary:any, refreshClasses: () => void) => {
+  
   const classDate = `${date}T${time}`;
   
-  axios.post(
-      `http://localhost:8080/api/classes/add/${ucId}`,
+  api.post(
+      `/classes/add/${ucId}`,
       {classDate, summary},
       {
           headers: {
@@ -51,18 +52,19 @@ const createClasse = (ucId: number, date: string, time:string, summary:any, refr
       }
   )
   .then(() => {
-    console.log("Class created.");
     refreshClasses();
   })
   .catch(() => {
-      console.error("Error creating class.");
+    alert("Ocorreu um erro ao criar aula.");
+    console.error("Error creating class.");
   });
 };
 
 const updateClasse = (ucId: number, classId: number, date: string, time:string, summary: string, refreshClasses: () => void) => {
+  
   const classDate = `${date}T${time}`;
-  axios.put(
-    `http://localhost:8080/api/classes/update/${ucId}/${classId}`,
+  api.put(
+    `/classes/update/${ucId}/${classId}`,
     { classDate, summary },
     {
       headers: {
@@ -72,18 +74,18 @@ const updateClasse = (ucId: number, classId: number, date: string, time:string, 
     }
   )
   .then(() => {
-    console.log("Class updated.");
     refreshClasses();
   })
   .catch(() => {
+    alert("Ocorreu um erro ao atualizar informações da aula.");
     console.error("Error updating class.");
   });
 };
 
 
 const deleteClasse = (ucId: number, classId: number, refreshClasses: () => void) => {
-  axios.delete(
-      `http://localhost:8080/api/classes/delete/${ucId}/${classId}`,
+  api.delete(
+      `/classes/delete/${ucId}/${classId}`,
       {
           headers: {
               Authorization: `Bearer ${localStorage.getItem("token")}`,
@@ -95,7 +97,8 @@ const deleteClasse = (ucId: number, classId: number, refreshClasses: () => void)
     refreshClasses();
   })
   .catch(() => {
-      console.error("Error deleting class.");
+    alert("Ocorreu um erro ao eliminar aula.");
+    console.error("Error deleting class.");
   });
 };
 

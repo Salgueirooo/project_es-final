@@ -1,7 +1,8 @@
-import { useState, useEffect } from 'react';
+import { useState } from 'react';
 import axios from 'axios';
 import { StatsDto } from '../dto/StatsDTO';
 import { AttendanceDto } from '../dto/AttendanceDTO';
+import api from '../services/api';
 
 const statsAttendace = () => {
     const [stats, setStats] = useState<StatsDto | null>(null);
@@ -9,23 +10,24 @@ const statsAttendace = () => {
     const [error, setError] = useState<string | null>(null);
 
     const fetchStats = async (ucId: number | null, isAdmin: boolean) => {
-        if (!ucId) return;
 
         try {
             if (!isAdmin) {
-                const response = await axios.get(
-                    `http://localhost:8080/api/stats/get-total-classes-and-times-attended/${ucId}`,
+                const response = await api.get(
+                    `/stats/get-total-classes-and-times-attended/${ucId}`,
                     { headers: { Authorization: `Bearer ${localStorage.getItem("token")}` } }
                 );
                 setStats(response.data);
             } else {
-                const response = await axios.get(
-                    `http://localhost:8080/api/stats/get-average-students-attended-per-class/${ucId}`,
+                const response = await api.get(
+                    `/stats/get-average-students-attended-per-class/${ucId}`,
                     { headers: { Authorization: `Bearer ${localStorage.getItem("token")}` } }
                 );
                 setStatsTeacher(response.data);
             }
+            setError(null);
         } catch (error) {
+            console.error("Erro ao obter estatisticas:", error);
             setError("Erro ao obter estatísticas.");
         }
     };
@@ -35,23 +37,21 @@ const statsAttendace = () => {
 
 const useNStudents = () => {
     const [nStudents, setNStudents] = useState<number>(0);
-    const [error, setError] = useState<string | null>(null);
 
     const fetchNStudents = async (ucId: number | null) => {
-        if (!ucId) return;
 
         try {
-            const response = await axios.get(
-                `http://localhost:8080/api/stats/get-total-registered-students/${ucId}`,
+            const response = await api.get(
+                `/stats/get-total-registered-students/${ucId}`,
                 { headers: { Authorization: `Bearer ${localStorage.getItem("token")}` } }
             );
             setNStudents(response.data);
         } catch (error) {
-            setError("Erro ao obter número de alunos.");
+            console.error("Erro ao procurar alunos inscritos na UC:", error);
         }
     };
 
-    return { nStudents, error, fetchNStudents };
+    return { nStudents, fetchNStudents };
 };
 
 const processAttendanceData = (attendanceArray: AttendanceDto[]): AttendanceDto[] => {
@@ -69,8 +69,8 @@ const useAttendPerClass = () => {
         if (!ucId) return;
 
         try {
-            const response = await axios.get(
-                `http://localhost:8080/api/stats/get-total-attended-to-classes-from-uc/${ucId}`,
+            const response = await api.get(
+                `/stats/get-total-attended-to-classes-from-uc/${ucId}`,
                 { headers: 
                     { Authorization: `Bearer ${localStorage.getItem("token")}` } 
                 }

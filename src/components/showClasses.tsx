@@ -14,6 +14,7 @@ import { BarChart, Bar, XAxis, YAxis, Tooltip, Legend, ResponsiveContainer } fro
 import { statsAttendace, useNStudents, useAttendPerClass } from "../hooks/statsHook";
 import { createReview, useAllReviews, useReviews } from "../hooks/reviewHook";
 import { UserDto } from "../dto/UsersDTO";
+import { useReviewTypes } from "../hooks/serverDataHook";
 
 interface ShowClassesProps {
     curricularUnitSelected: number;
@@ -23,8 +24,6 @@ interface ShowClassesProps {
 const ShowClasses: React.FC<ShowClassesProps> = ({ curricularUnitSelected, nameUnitSelected }) => {
     
     const { classes, error: errorClasses, refreshClasses } = useClasses(curricularUnitSelected);
-    
-    const { userId } = useUserId();
     
     const [student, setStudent] = useState<UserDto | null>(null);
 
@@ -43,7 +42,7 @@ const ShowClasses: React.FC<ShowClassesProps> = ({ curricularUnitSelected, nameU
     const { attendance: AttendStudents, error: error2, refreshAttendance } = useAttendances(classeSelected?.id ? classeSelected.id : 0);
     
     const { stats, statsTeacher, error: errorStats, fetchStats } = statsAttendace();
-    const { nStudents, error: errorNStud, fetchNStudents } = useNStudents();
+    const { nStudents, fetchNStudents } = useNStudents();
     const { attendancesPerClass, error: errorAttend, fetchAttendPClass } = useAttendPerClass();
     
     const { reviews, error: errorReviews, refreshReviews } = useReviews(classeSelected?.id? classeSelected.id : null);
@@ -63,20 +62,7 @@ const ShowClasses: React.FC<ShowClassesProps> = ({ curricularUnitSelected, nameU
 
     const horario = classeSelected?.dateTime ? classeSelected.dateTime.split(' ') : [];
 
-    const data = [
-        { name: "Janeiro", valor: 0 },
-        { name: "Fevereiro", valor: 0 },
-        { name: "Março", valor: 0 },
-        { name: "Abril", valor: 0 }
-    ];
-
-    const reviewsType = [
-        {id: "AUTONOMIA", name: "Autonomia", description: "Capacidade do aluno de tomar iniciativas e resolver problemas sem depender constantemente do professor"},
-        {id: "COMPORTAMENTO", name: "Comportamento", description: "Atitude e respeito do aluno em relação ao professor e aos colegas durante as aulas"},
-        {id: "INTERVENCOES", name: "Intervenções", description: "Qualidade e pertinência das contribuições do aluno nas discussões em aula"},
-        {id: "PARTICIPACAO", name: "Participação", description: "Presença do aluno nas atividades e discussões de forma ativa e colaborativa"},
-        {id: "CRIATIVIDADE", name: "Criatividade", description: "Capacidade do aluno de apresentar ideias originais e soluções inovadoras durante as atividades"}
-    ];
+    const { reviewTypes } = useReviewTypes();
 
     const resetDataClass = () => {
         setSummary("");
@@ -159,7 +145,7 @@ const ShowClasses: React.FC<ShowClassesProps> = ({ curricularUnitSelected, nameU
                                         //setidClasseSelected(classe.id);
                                         if (!isAdmin) {
                                             if (classe.dateTime && new Date(classe.dateTime.replace(" ", "T")) <= new Date()) {
-                                                fetchAttendance(curricularUnitSelected, classe.id, userId);
+                                                fetchAttendance(curricularUnitSelected, classe.id);
                                                 refreshReviews();
                                             }
                                         } else {
@@ -396,15 +382,18 @@ const ShowClasses: React.FC<ShowClassesProps> = ({ curricularUnitSelected, nameU
                                             <h3>Aula {index + 1}</h3>
                                             <div style={{paddingLeft: "1vw", paddingRight: "1vw"}}>
                                                 <table className="factsTable2">
-                                            {reviewClass.reviews.length > 0 && ( // Só mostra o cabeçalho se houver reviews
-                                                <thead>
-                                                <tr>
-                                                    <th>Avaliação</th>
-                                                    <th>Comentário</th>
-                                                    <th>Categoria</th>
-                                                </tr>
-                                                </thead>
-                                            )} 
+                                                {reviewClass.reviews.length > 0 ? (
+                                                    // Se houver reviews, mostra a tabela
+                                                    <thead>
+                                                        <tr>
+                                                            <th>Avaliação</th>
+                                                            <th>Comentário</th>
+                                                            <th>Categoria</th>
+                                                        </tr>
+                                                    </thead>
+                                                ) : (
+                                                    <p style={{margin:"0"}}>Não existem factos nesta aula.</p>
+                                                )} 
                                             <tbody>
                                             {reviewClass.reviews.map((facto) => (
                                                     <tr key={facto.id}>
@@ -472,9 +461,9 @@ const ShowClasses: React.FC<ShowClassesProps> = ({ curricularUnitSelected, nameU
                                     }
                                 }}
                                 required
-                                min="0"
+                                min="1"
                                 max="5"
-                                placeholder="Avaliação (0 a 5)"
+                                placeholder="Avaliação (1 a 5)"
                             />
                             <select
                                 className="typeRevLabel"
@@ -484,9 +473,9 @@ const ShowClasses: React.FC<ShowClassesProps> = ({ curricularUnitSelected, nameU
                                 required
                                 >
                                 <option value="" disabled>Selecione uma Categoria</option>
-                                {reviewsType.map((review, index) => (
-                                    <option key={review.id} value={index + 1}>
-                                    {review.name}
+                                {reviewTypes.map((review, index) => (
+                                    <option key={review} value={index + 1}>
+                                    {review}
                                     </option>
                                 ))}
                             </select>

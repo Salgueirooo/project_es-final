@@ -2,6 +2,7 @@ import { useState, useEffect } from 'react';
 import axios from 'axios';
 import { ReviewDTO } from '../dto/ReviewDTO';
 import { ReviewsPerClasseDTO } from '../dto/ReviewsPerClassDTO';
+import api from '../services/api';
 
 const useReviews = (classId: number | null) => {
     const [reviews, setReviews] = useState<ReviewDTO[]>([]);
@@ -10,14 +11,13 @@ const useReviews = (classId: number | null) => {
 
     const fetchReviewsByClassId = async (classId: number) => {
         try {
-          const response = await axios.get(`http://localhost:8080/api/reviews/get-reviews-by-class/${classId}`, {
+          const response = await api.get(`/reviews/get-reviews-by-class/${classId}`, {
             headers: {
               Authorization: `Bearer ${localStorage.getItem("token")}`,
             },
           });
           setReviews(response.data);
           setError(null);
-          //setIsClassesPopupOpen(true); // Open the popup after fetching the data
         } catch (error) {
           console.error("Error fetching classes:", error);
           setError('Erro ao listar as aulas');
@@ -43,10 +43,9 @@ const useAllReviews = () => {
   const [error, setError] = useState<string | null>(null);
 
   const fetchReviewsByClassId = async (ucId: number | null) => {
-      if (!ucId) return;
 
       try {
-        const response = await axios.get(`http://localhost:8080/api/reviews/get-reviews-per-class-by-uc/${ucId}`, {
+        const response = await api.get(`/reviews/get-reviews-per-class-by-uc/${ucId}`, {
           headers: {
             Authorization: `Bearer ${localStorage.getItem("token")}`,
           },
@@ -64,8 +63,8 @@ const useAllReviews = () => {
 
 const createReview = (ucId: number, classId: number, studentId: number, value: any, comment:any, participationId: any, refreshClasses: () => void) => {
     
-    axios.post(
-        `http://localhost:8080/api/reviews/set-review-to-student/${ucId}/${classId}/${studentId}`,
+    api.post(
+        `/reviews/set-review-to-student/${ucId}/${classId}/${studentId}`,
         {value, comment, participationId},
         {
             headers: {
@@ -75,11 +74,11 @@ const createReview = (ucId: number, classId: number, studentId: number, value: a
         }
     )
     .then(() => {
-      console.log("Class created.");
       refreshClasses();
     })
     .catch(() => {
-        console.error("Error creating class.");
+      alert("Ocorreu um erro ao criar facto.");
+      console.error("Error creating class.");
     });
   };
 
