@@ -9,12 +9,13 @@ interface SecurityElem {
 
 const Security: React.FC<SecurityElem> = ({ allowedRoles, children }) => {
   const navigate = useNavigate();
-  const token = localStorage.getItem('token')?.trim(); // Remove any extra spaces
-  const [isAuthorized, setIsAuthorized] = useState<boolean | null>(null); // Manage authorization state
+  const token = localStorage.getItem('token')?.trim();
+  const [isAuthorized, setIsAuthorized] = useState<boolean | null>(null);
 
   useEffect(() => {
     if (!token || token.split('.').length !== 3) {
       console.error('Invalid token structure:', token);
+      alert("Token inválido!");
       navigate('/');
       setIsAuthorized(false);
       return;
@@ -25,6 +26,7 @@ const Security: React.FC<SecurityElem> = ({ allowedRoles, children }) => {
       decodedToken = jwtDecode(token);
     } catch (error) {
       console.error('Error decoding token:', error);
+      alert("Token inválido!");
       navigate('/');
       setIsAuthorized(false);
       return;
@@ -32,6 +34,7 @@ const Security: React.FC<SecurityElem> = ({ allowedRoles, children }) => {
 
     const userRole = decodedToken?.role;
     if (!userRole) {
+      alert("Cargo não encontrado!");
       navigate('/');
       setIsAuthorized(false);
       return;
@@ -40,12 +43,13 @@ const Security: React.FC<SecurityElem> = ({ allowedRoles, children }) => {
     const hasAccess = allowedRoles.some((role: string) => userRole.includes(role));
 
     if (!hasAccess) {
-      navigate('/unauthorized'); // Redirect if role is not allowed
-      setIsAuthorized(false); // Set unauthorized state
+      alert("Cargo não permitido!");
+      navigate('/');
+      setIsAuthorized(false);
       return;
     }
 
-    setIsAuthorized(true); // Set authorized state if role is valid
+    setIsAuthorized(true);
   }, []);
 
   if (isAuthorized) {
