@@ -7,11 +7,7 @@ const useUserRoles = () => {
 
     useEffect(() => {
         axios
-            .get("http://localhost:8080/api/roles", {
-                headers: {
-                    Authorization: `Bearer ${localStorage.getItem("token")}`
-                }
-            })
+            .get("http://localhost:8080/api/roles")
             .then((response) => {
                 setRoles(response.data);
             })
@@ -29,11 +25,7 @@ const useReviewTypes = () => {
 
     useEffect(() => {
         axios
-            .get("http://localhost:8080/api/participation-types", {
-                headers: {
-                    Authorization: `Bearer ${localStorage.getItem("token")}`
-                }
-            })
+            .get("http://localhost:8080/api/participation-types")
             .then((response) => {
                 setReviewTypes(response.data);
             })
