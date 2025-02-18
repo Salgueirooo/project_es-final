@@ -3,11 +3,10 @@ import { Routes, Route } from 'react-router-dom';
 import LoginPage from './pages/login';
 import HomePage from './pages/homePage';
 import Security from './SecurityControl';
-import { useUserRoles } from './hooks/serverDataHook';
 
 const App: React.FC = () => {
   
-  const { roles } = useUserRoles();
+  const  roles = ["ROLE_USER", "ROLE_ADMIN"];
 
   return (
     <Routes>
