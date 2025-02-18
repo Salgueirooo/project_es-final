@@ -41,8 +41,6 @@ const Security: React.FC<SecurityElem> = ({ allowedRoles, children }) => {
     }
 
     const hasAccess = allowedRoles.some((role: string) => userRole.includes(role));
-    console.log(allowedRoles);
-    console.log(userRole);
     if (!hasAccess) {
       alert("Cargo não permitido!");
       navigate('/');

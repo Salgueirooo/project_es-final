@@ -1,5 +1,4 @@
 import { useState, useEffect } from 'react';
-import axios from 'axios';
 import { ReviewDTO } from '../dto/ReviewDTO';
 import { ReviewsPerClasseDTO } from '../dto/ReviewsPerClassDTO';
 import api from '../services/api';
@@ -44,18 +43,18 @@ const useAllReviews = () => {
 
   const fetchReviewsByClassId = async (ucId: number | null) => {
 
-      try {
-        const response = await api.get(`/reviews/get-reviews-per-class-by-uc/${ucId}`, {
-          headers: {
-            Authorization: `Bearer ${localStorage.getItem("token")}`,
-          },
-        });
-        setAllReviews(response.data);
-        setError(null);
-      } catch (error) {
-        console.error("Error fetching classes:", error);
-        setError("Erro ao listar as aulas");
-      }
+    try {
+      const response = await api.get(`/reviews/get-reviews-per-class-by-uc/${ucId}`, {
+        headers: {
+          Authorization: `Bearer ${localStorage.getItem("token")}`,
+        },
+      });
+      setAllReviews(response.data);
+      setError(null);
+    } catch (error) {
+      console.error("Error fetching classes:", error);
+      setError("Erro ao listar as aulas");
+    }
   };
 
   return { allReviews, error, fetchReviewsByClassId };
@@ -63,23 +62,23 @@ const useAllReviews = () => {
 
 const createReview = (ucId: number, classId: number, studentId: number, value: any, comment:any, participationId: any, refreshClasses: () => void) => {
     
-    api.post(
-        `/reviews/set-review-to-student/${ucId}/${classId}/${studentId}`,
-        {value, comment, participationId},
-        {
-            headers: {
-                Authorization: `Bearer ${localStorage.getItem("token")}`,
-                "Content-Type": "application/json",
-            },
-        }
-    )
-    .then(() => {
-      refreshClasses();
-    })
-    .catch(() => {
-      alert("Ocorreu um erro ao criar facto.");
-      console.error("Error creating class.");
-    });
-  };
+  api.post(
+    `/reviews/set-review-to-student/${ucId}/${classId}/${studentId}`,
+    {value, comment, participationId},
+    {
+      headers: {
+        Authorization: `Bearer ${localStorage.getItem("token")}`,
+        "Content-Type": "application/json",
+      },
+    }
+  )
+  .then(() => {
+    refreshClasses();
+  })
+  .catch(() => {
+    alert("Ocorreu um erro ao criar facto.");
+    console.error("Error creating class.");
+  });
+};
 
 export { useReviews, useAllReviews, createReview };

@@ -1,5 +1,4 @@
 import { useState, useEffect } from 'react';
-import axios from 'axios';
 import { ClassesDto } from '../dto/ClassesDTO';
 import api from '../services/api';
 
@@ -93,7 +92,6 @@ const deleteClasse = (ucId: number, classId: number, refreshClasses: () => void)
       }
   )
   .then(() => {
-    console.log("Class deleted!");
     refreshClasses();
   })
   .catch(() => {

@@ -1,5 +1,4 @@
 import { useState } from 'react';
-import axios from 'axios';
 import { StatsDto } from '../dto/StatsDTO';
 import { AttendanceDto } from '../dto/AttendanceDTO';
 import api from '../services/api';
@@ -57,7 +56,7 @@ const useNStudents = () => {
 const processAttendanceData = (attendanceArray: AttendanceDto[]): AttendanceDto[] => {
     return attendanceArray.map((attendance, index) => ({
         ...attendance,
-        nclass: `Aula n.º${index + 1}`, // Formata como "Aula 1", "Aula 2", etc.
+        nclass: `Aula n.º${index + 1}`,
     }));
 };
 
@@ -66,7 +65,6 @@ const useAttendPerClass = () => {
     const [error, setError] = useState<string | null>(null);
 
     const fetchAttendPClass = async (ucId: number | null) => {
-        if (!ucId) return;
 
         try {
             const response = await api.get(
@@ -79,6 +77,7 @@ const useAttendPerClass = () => {
             setAttendancesPerClass(processedData);
         } catch (error) {
             setError("Erro ao obter número de alunos.");
+            console.error("Erro ao obter número de alunos:", error);
         }
     };
 

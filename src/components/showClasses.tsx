@@ -1,9 +1,7 @@
-//import axios from "axios";
-import React, { useEffect, useState } from "react";
+import React, { useState } from "react";
 import { useClasses, deleteClasse, createClasse, updateClasse } from '../hooks/classesHook'
-import { useUserId } from "../hooks/userHook";
 import Modal from "../modal/modalInfoClassesUser";
-import useToken from "../hooks/tokenHook";
+import useDecodedToken from "../hooks/tokenHook";
 import { RxInfoCircled, RxCross2 } from "react-icons/rx";
 import { GrConfigure, GrCompliance  } from "react-icons/gr";
 import { FaPlus } from "react-icons/fa";
@@ -33,17 +31,17 @@ const ShowClasses: React.FC<ShowClassesProps> = ({ curricularUnitSelected, nameU
     const [isModalStatOpen, setIsModalStatOpen] = useState(false);
     const [isModalReviewOpen, setIsModalReviewOpen] = useState(false);
     
-    const { decodedToken, error: tokenError } = useToken();
+    const { decodedToken } = useDecodedToken();
     const isAdmin: boolean = decodedToken?.role?.includes("ROLE_ADMIN");
     const [classeSelected, setClasseSelect] = useState<ClassesDto | null>(null);
     const [nClasseSelected, setnClasseSelected] = useState(0);
     
-    const { attendance, error: error5, fetchAttendance } = useAttendance();
-    const { attendance: AttendStudents, error: error2, refreshAttendance } = useAttendances(classeSelected?.id ? classeSelected.id : 0);
+    const { attendance, fetchAttendance } = useAttendance();
+    const { attendance: AttendStudents, error: errorAttendStud, refreshAttendance } = useAttendances(classeSelected?.id ? classeSelected.id : 0);
     
-    const { stats, statsTeacher, error: errorStats, fetchStats } = statsAttendace();
+    const { stats, statsTeacher, fetchStats } = statsAttendace();
     const { nStudents, fetchNStudents } = useNStudents();
-    const { attendancesPerClass, error: errorAttend, fetchAttendPClass } = useAttendPerClass();
+    const { attendancesPerClass, fetchAttendPClass } = useAttendPerClass();
     
     const { reviews, error: errorReviews, refreshReviews } = useReviews(classeSelected?.id? classeSelected.id : null);
     const { allReviews, error: errorAllRev, fetchReviewsByClassId } = useAllReviews();
@@ -207,7 +205,6 @@ const ShowClasses: React.FC<ShowClassesProps> = ({ curricularUnitSelected, nameU
                         </>
                     )}
                     <p className="summary"><b>Sumário: </b>{classeSelected?.summary}</p>
-                    {/* <h2 className="listFactos"></h2> */}
                     {!isAdmin && (
                         <>
                             <h2 className="listFactos"></h2>
@@ -232,6 +229,7 @@ const ShowClasses: React.FC<ShowClassesProps> = ({ curricularUnitSelected, nameU
                                     ))}
                                 </tbody>
                                 </table>
+                                {errorReviews && <h5 className='error'>{errorReviews}</h5>}
                             </div>
                         </>
                     )}
@@ -287,7 +285,7 @@ const ShowClasses: React.FC<ShowClassesProps> = ({ curricularUnitSelected, nameU
                                     ))}
                                 </tbody>
                                 </table>
-                                {error2 && <h5 className='error'>{error2}</h5>}
+                                {errorAttendStud && <h5 className='error'>{errorAttendStud}</h5>}
                             </div>
                         </div>
                     )}
@@ -319,9 +317,9 @@ const ShowClasses: React.FC<ShowClassesProps> = ({ curricularUnitSelected, nameU
                             value={editSummary}
                             onChange={(e) => setEditSummary(e.target.value)}
                             maxLength={254}
-                            rows={4} // Define o número de linhas visíveis
-                            cols={50} // (Opcional) Define a largura do textarea
-                            style={{ resize: "vertical" }} // Permite redimensionar verticalmente
+                            rows={4}
+                            cols={50}
+                            style={{ resize: "vertical" }}
                         />
                         <button type="submit" className="botSubmit">Alterar aula</button>
                     </form>
@@ -336,7 +334,6 @@ const ShowClasses: React.FC<ShowClassesProps> = ({ curricularUnitSelected, nameU
                         <input className="loginLabel"
                             type="date"
                             id="date"
-                            //placeholder='Data'
                             value={date}
                             onChange={(e) => setDate(e.target.value)}
                             required
@@ -345,7 +342,6 @@ const ShowClasses: React.FC<ShowClassesProps> = ({ curricularUnitSelected, nameU
                         <input className="loginLabel"
                             type="time"
                             id="time"
-                            //placeholder='Horário'
                             value={time}
                             onChange={(e) => setTime(e.target.value)}
                             required
@@ -356,9 +352,9 @@ const ShowClasses: React.FC<ShowClassesProps> = ({ curricularUnitSelected, nameU
                             value={summary}
                             onChange={(e) => setSummary(e.target.value)}
                             maxLength={254}
-                            rows={4} // Define o número de linhas visíveis
-                            cols={50} // (Opcional) Define a largura do textarea
-                            style={{ resize: "vertical" }} // Permite redimensionar verticalmente
+                            rows={4}
+                            cols={50}
+                            style={{ resize: "vertical" }}
                         />
                         <button type="submit" className="botSubmit">Criar aula</button>
                     </form>                    
@@ -383,7 +379,6 @@ const ShowClasses: React.FC<ShowClassesProps> = ({ curricularUnitSelected, nameU
                                             <div style={{paddingLeft: "1vw", paddingRight: "1vw"}}>
                                                 <table className="factsTable2">
                                                 {reviewClass.reviews.length > 0 ? (
-                                                    // Se houver reviews, mostra a tabela
                                                     <thead>
                                                         <tr>
                                                             <th>Avaliação</th>
@@ -392,7 +387,11 @@ const ShowClasses: React.FC<ShowClassesProps> = ({ curricularUnitSelected, nameU
                                                         </tr>
                                                     </thead>
                                                 ) : (
-                                                    <p style={{margin:"0"}}>Não existem factos nesta aula.</p>
+                                                    <thead>
+                                                        <tr>
+                                                            <th>Não existem factos nesta aula.</th>
+                                                        </tr>
+                                                    </thead>
                                                 )} 
                                             <tbody>
                                             {reviewClass.reviews.map((facto) => (
@@ -406,14 +405,9 @@ const ShowClasses: React.FC<ShowClassesProps> = ({ curricularUnitSelected, nameU
                                             </tbody>
                                             </table>
                                             </div>
-                                            
-                                            {/* <ul>
-                                                {reviewClass.reviews.map((facto) => (
-                                                    <li key={facto.id}>{facto.value} - {facto.comment} - {facto.participationType}</li>
-                                                ))}
-                                            </ul> */}
                                         </div>
                                     ))}
+                                    {errorAllRev && <h5 className='error'>{errorAllRev}</h5>}
                                 </div>
                             </>
                         }
@@ -489,9 +483,9 @@ const ShowClasses: React.FC<ShowClassesProps> = ({ curricularUnitSelected, nameU
                                 value={commentReview}
                                 onChange={(e) => setCommentReview(e.target.value)}
                                 maxLength={254}
-                                rows={4} // Define o número de linhas visíveis
-                                cols={50} // (Opcional) Define a largura do textarea
-                                style={{ resize: "vertical" }} // Permite redimensionar verticalmente
+                                rows={4}
+                                cols={50}
+                                style={{ resize: "vertical" }}
                             />
                         </div>
                     </form>
@@ -517,6 +511,7 @@ const ShowClasses: React.FC<ShowClassesProps> = ({ curricularUnitSelected, nameU
                             ))}
                         </tbody>
                         </table>
+                        {errorReviews && <h5 className='error'>{errorReviews}</h5>}
                     </div>
                 </div>
             </Modal>

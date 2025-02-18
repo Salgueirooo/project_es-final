@@ -2,13 +2,9 @@
   font-family: system-ui;
   background-color: #1d2027;
   color: #ffffff;
-  
   --cor-fundo: #1d2027;
-  /*1E1E1E1*/
-  /*191D25*/
   --cor-principal: #63090F;
   --cinzento-claro: #cccccc;
-  /*D4D3D3*/
 }
 
 body{
@@ -21,7 +17,6 @@ body{
 .page {
   width: 100vw;
   height: 100vh;
-  
 }
 
 .topBar {
@@ -29,7 +24,7 @@ body{
   background-color: var(--cor-principal);
   display: flex;
   align-items: center;
-  justify-content: center; /* Mantém o título centrado */
+  justify-content: center;
   position: relative;
   font-size: 3.2vh;
   font-weight: bold;
@@ -38,13 +33,13 @@ body{
 
 .welcome-text {
   position: absolute;
-  left: 2vw; /* Posiciona a frase à esquerda */
+  left: 2vw;
   font-size: 2.5vh;
 }
 
 .logout {
   position: absolute;
-  right: 2vw; /* Posiciona a frase à esquerda */
+  right: 2vw;
   height: 6vh;
   width: 6vh;
   margin: 0;
@@ -57,17 +52,15 @@ body{
   border: 1px solid transparent;
   border-color: #cccccc;
   display: flex;
-  align-items: center;  /* Alinha verticalmente */
+  align-items: center;
   justify-content: center;
-} 
-
+}
 .logout:hover {
   outline: 1px solid #cccccc;
   box-shadow: 0px 0px 5px #cccccc;
 }
-
 .logout svg {
-  font-size: 3.2vh; /* Aumenta o ícone */
+  font-size: 3.2vh;
   font-weight: bold;
   
 }
@@ -163,7 +156,6 @@ input::placeholder {
   position: fixed;
   text-align: center;
   bottom: 0;
-  /* left: 0; */
   width: 100%;
   padding-bottom: 12vh;
   font-size: 2vh;
@@ -173,33 +165,16 @@ input::placeholder {
 /* HomePage */
 .homePage{
   display: block;
-
 }
 
 .custom-table{
   width: 100%;
   border-collapse: collapse;
-  
 }
-
 .custom-table tbody {
   overflow: hidden;
   text-overflow: ellipsis;
 }
-
-/* Estiliza o cabeçalho */
-.custom-table thead {
-  /* background-color: var(--cor-principal);
-  border: 20px; */
-
-  
-}
-
-/* thead th {
-  border-radius: 10px;
-} */
-
-/* Alinha os cabeçalhos corretamente */
 .custom-table th {
   padding: 2vh;
   border-bottom: 2px solid #f4f4f4;
@@ -207,12 +182,8 @@ input::placeholder {
   background-color: var(--cor-fundo);
   font-size: 2.4vh;
 }
-
-/* Estiliza as células do corpo */
 .custom-table td {
   font-size: 2.2vh;
-  /* flex-grow: 1;
-  overflow-y: auto; */
   padding: 1.4vh;
   padding-left: 1.4vw;
   font-weight: bold;
@@ -225,7 +196,6 @@ input::placeholder {
 }
 .custom-table td:hover, .selected-row {
   background-color: var(--cor-principal);
-  
 }
 
 .divTable {
@@ -240,15 +210,13 @@ input::placeholder {
 }
 
 .col1 {
-  width: 17vw; /* Define a largura do menu */
+  width: 17vw; 
   height: 91vh;
   background-color: var(--cor-fundo);
   color: white;
-  /* padding: 20px; */
   display: flex;
   flex-direction: column;
   border-right: 1px solid #f4f4f4;
-  /* overflow-y: auto; */
 }
 
 .bots {
@@ -263,10 +231,9 @@ input::placeholder {
 }
 
 .panel3 {
-  flex: 1; /* Ocupa todo o espaço restante */
+  flex: 1;
   background-color: var(--cor-fundo);
-  /* padding: 20px; */
-  overflow-y: auto; /* Adiciona scroll apenas se necessário */
+  overflow-y: auto;
   border-top: 2px solid #f4f4f4;
   padding: 0vh 2vw 0vh 2vw;
 }
@@ -277,10 +244,6 @@ input::placeholder {
 }
 
 .nothingToShow {
-  /* display: flex; */
-  /* margin:0;
-  align-items: center;
-  justify-items: center; */
   height: 100%;
   width: 100%;
   display: grid;
@@ -290,35 +253,20 @@ input::placeholder {
   font-weight: bold;
 }
 
-/**/
 .classesTable {
   font-size: 2.3vh;
-  /* width: 100%; */
-  /* display: grid; */
   padding-top: 8vh;
   width: 70vw;
   border-collapse: collapse;
   line-height: 1.5;
 }
-
 .classesTable th {
   padding: 1.4vh;
   border-bottom: 2px solid #f4f4f4;
   text-align: left;
-  /* border-top: 2px solid #f4f4f4; */
-  /* background-color: #63090F; */
 }
-
-/* Estiliza as células do corpo */
 .classesTable td {
-  
-  
-  /* flex-grow: 1;
-  overflow-y: auto; */
   padding: 1.4vh;
-  /* padding-left: 1.4vw; */
-  /* font-weight: bold; */
-  /* cursor: pointer; */
   border-bottom: 1px solid #f4f4f4;
 }
 
@@ -332,7 +280,6 @@ input::placeholder {
 }
 
 .summaryClasse {
-  
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
@@ -340,7 +287,6 @@ input::placeholder {
 }
 
 .buttonsClasse {
-  /* display: inline-flexbox; */
   width: 0;
 }
 
@@ -348,12 +294,9 @@ input::placeholder {
   font-size: 2.5vh;
   height: 10vh;
   border-bottom: 1px solid #f4f4f4;
-  /* padding-bottom: 6vh; */
   padding: 0vh 17vw 0vh 2vw;
   line-height: 10vh;
-  /* display: flex; */
   margin:0;
-  /* align-items: center; */
   white-space: nowrap;
   text-overflow: ellipsis;
   overflow:hidden;
@@ -375,7 +318,6 @@ input::placeholder {
   align-items: center;
   justify-content: center;
 }
-
 .botAddClasse:hover{
   outline: 1px solid #cccccc;
   box-shadow: 0px 0px 5px #cccccc;
@@ -386,32 +328,16 @@ input::placeholder {
   color: #ffffff;
 }
 
-/* .divTablePanel3 {
-  height: 100%;
-  width: 100%;
-  
-  display: grid;
-  align-items: center;
-  justify-items: center;
-  
-} */
-
 .areaClasses {
   height: 100%;
   width: 100%;
 }
 
 .divTable2 {
-  /* display: grid; */
   flex: 1;
   overflow-y: auto;
-  height: 70vh; /*70*/
+  height: 70vh;
   margin-top: 6vh;
-  /* padding-top: 6vh; */
-  /* width: 100%; */
-  /* padding: 2vh; */
-  /* display: grid; */
-  /* align-items: center; */
   justify-items: center;
 }
 
@@ -470,19 +396,19 @@ input::placeholder {
 }
 
 .botInfo svg {
-  font-size: 3.5vh; /* Aumenta o ícone */
+  font-size: 3.5vh;
   font-weight: bold;
   color: #cccccc;
 }
 
 .botConf svg {
-  font-size: 2.5vh; /* Aumenta o ícone */
+  font-size: 2.5vh;
   font-weight: bold;
   color: #cccccc;
 }
 
 .botDel svg {
-  font-size: 3.5vh; /* Aumenta o ícone */
+  font-size: 3.5vh;
   font-weight: bold;
   color: #cccccc;
 }
@@ -505,58 +431,7 @@ input::placeholder {
   align-items: center;
   justify-content: center;
 }
-
 .botEstat:hover {
   outline: 1px solid #cccccc;
   box-shadow: 0px 0px 5px #cccccc;
 }
-
-
-/*
-a {
-  font-weight: 500;
-  color: #646cff;
-  text-decoration: inherit;
-}
-a:hover {
-  color: #535bf2;
-}
-
-
-
-h1 {
-  font-size: 3.2em;
-  line-height: 1.1;
-}
-
-button {
-  border-radius: 8px;
-  border: 1px solid transparent;
-  padding: 0.6em 1.2em;
-  font-size: 1em;
-  font-weight: 500;
-  font-family: inherit;
-  background-color: #1a1a1a;
-  cursor: pointer;
-  transition: border-color 0.25s;
-}
-button:hover {
-  border-color: #646cff;
-}
-button:focus,
-button:focus-visible {
-  outline: 4px auto -webkit-focus-ring-color;
-}*/
-/*
-@media (prefers-color-scheme: light) {
-  :root {
-    color: #213547;
-    background-color: #ffffff;
-  }
-  a:hover {
-    color: #747bff;
-  }
-  button {
-    background-color: #f9f9f9;
-  }
-}*/

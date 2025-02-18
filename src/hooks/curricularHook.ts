@@ -1,5 +1,4 @@
 import { useState, useEffect } from 'react';
-import axios from 'axios';
 import { CurricularUnitDto } from '../dto/CurricularUnitDTO';
 import api from '../services/api';
 

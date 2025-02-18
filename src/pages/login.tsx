@@ -26,7 +26,7 @@ const LoginPage: React.FC = () => {
                 setError('');
                 navigate('/home');
             } else {
-                setError('Erro: O token não foi recebido');
+                setError('Erro: Token não encontrado');
             }
         
         } catch (erro) {

@@ -1,5 +1,4 @@
 import { useState, useEffect } from 'react';
-import axios from 'axios';
 import { UserDto } from '../dto/UsersDTO';
 import api from '../services/api';
 
@@ -21,6 +20,7 @@ const useAttendance = () => {
         })
         .catch(() => {
             setError("Erro ao listar presença.");
+            console.error("Error fetching attendance.");
         });
     };
 
@@ -45,7 +45,7 @@ const useAttendances = (classId: number | null) => {
             setAttendance(response.data);
             setError(null);
         } catch (error) {
-            console.error("Error fetching attendance:", error);
+            console.error("Error fetching attendances:", error);
             setError("Erro ao listar presenças.");
         }
     };

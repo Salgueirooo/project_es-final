@@ -1,7 +1,7 @@
 import { useState, useEffect } from 'react';
 import { jwtDecode } from 'jwt-decode';
 
-const useToken = () => {
+const useDecodedToken = () => {
   const [decodedToken, setDecodedToken] = useState<any>(null);
   const [error, setError] = useState<string | null>(null);
 
@@ -24,4 +24,4 @@ const useToken = () => {
   return { decodedToken, error };
 };
 
-export default useToken;
+export default useDecodedToken;

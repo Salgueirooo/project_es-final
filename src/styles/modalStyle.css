@@ -5,11 +5,11 @@
   width: 100vw;
   height: 100vh;
   color: #ffffff;
-  background: rgba(0, 0, 0, 0.5); /* Fundo escuro semi-transparente */
+  background: rgba(0, 0, 0, 0.5);
   display: flex;
   align-items: center;
   justify-content: center;
-  z-index: 999; /* Fica acima de tudo */
+  z-index: 999;
 }
   
 .modal-content {
@@ -17,13 +17,9 @@
   padding: 1.5vh 0vw 0vh 0vw;
   border-radius: 8px;
   width: 50vw;
-
   height: 80vh;
-  /* height: 700px; */
   box-shadow: 0px 5px 10px rgba(0, 0, 0, 0.3);
-  /* text-align: center; */
   position: relative;
-  /* overflow-y: auto; */
 }
 
 .close-bot {
@@ -42,7 +38,6 @@
 
 .close-bot svg {
   font-size: 2.5vh;
-
 }
 
 .close-bot:hover {
@@ -99,37 +94,22 @@
   flex: 1;
   overflow-y: auto;
   height: 40vh;
-  /* margin-top: 6vh; */
-  /* padding-top: 6vh; */
-  /* width: 100%; */
-  /* padding: 2vh; */
-  /* display: grid; */
-  /* align-items: center; */
   justify-items: center;
 }
 
 .studentsTable {
   font-size: 2.2vh;
   width: 100%;
-  
-  /* display: grid; */
   padding-top: 8vh;
-  /* width: auto; */
   border-collapse: collapse;
-  /* line-height: 1.5; */
 }
-
 .studentsTable th {
   padding-bottom: 0.5vh;
   border-bottom: 2px solid #f4f4f4;
   text-align: left;
   font-size: 2vh;
   padding-left: 0.5vw;
-  /* border-top: 2px solid #f4f4f4; */
-  /* background-color: #63090F; */
 }
-
-/* Estiliza as células do corpo */
 .studentsTable td {
   text-align: left;
   border-bottom: 1px solid #f4f4f4;
@@ -152,7 +132,6 @@
 }
 
 .botFact {
-  
   height: 4vh;
   width: 6vh;
   background-color: #0f100f;
@@ -164,7 +143,6 @@
   align-items: center;
   justify-content: center;
 }
-
 .botFact:hover {
   outline: 1px solid #0f100f;
   box-shadow: 0px 0px 5px #0f100f;
@@ -187,12 +165,10 @@
   align-items: center;
   justify-content: center;
 }
-
 .botAttend-true:hover {
   outline: 1px solid #045304;
   box-shadow: 0px 0px 5px #045304;
 }
-
 .botAttend-false {
   height: 4vh;
   width: 9.4vh;
@@ -205,19 +181,16 @@
   align-items: center;
   justify-content: center;
 }
-
 .botAttend-false:hover {
   outline: 1px solid #63090F;
   box-shadow: 0px 0px 5px #63090F;
 }
-
 .botAttend-false, .botAttend-true svg {
   color: #ffffff;
   font-size: 2.5vh;
 }
 
 .form2 {
-  
   width: 100%;
   padding-top: 2vh;
   height: 55vh;
@@ -227,6 +200,7 @@
   justify-content: center;
   gap: 2vh;
 }
+
 textarea {
   padding: 1vh 1vw 1vh 1vw;
   height: 12vh;
@@ -236,13 +210,11 @@ textarea {
   background-color: var(--cinzento-claro);
   border-color: var(--cor-principal);
   font-size: 1.7vh;
-  
 }
-
 textarea::placeholder {
   color: #63090F;
-  font-size: 1.8vh; /* Altere o tamanho da fonte */
-  font-family: Arial, sans-serif; /* Altere a fonte */
+  font-size: 1.8vh;
+  font-family: Arial, sans-serif;
   font-weight: bold;
 }
 
@@ -271,17 +243,12 @@ option {
 
 .form3 {
   width: 100%;
-  /* height: 14vh; */
   display: flex;
   flex-direction:column;
-  /* align-items: center; */
-  /* justify-content: center; */
-  /* padding-bottom: 2vh; */
   padding-top: 2vh;
 }
 
 .botSubmit2 {
-  /* margin-top: 4vh; */
   color-scheme: dark;
   border-radius: 5px;
   width: 18vh;
@@ -301,9 +268,8 @@ option {
 .colRev1, .colRev2 {
   display: flex;
   justify-content: space-between; 
-  align-items: center; /* Alinha verticalmente os itens */
-  /* gap: 0vh; */
-  width: 100%; /* Ocupa toda a largura disponível */
+  align-items: center;
+  width: 100%;
   padding-bottom: 2vh;
 }
 
@@ -322,18 +288,15 @@ option {
 .typeRevLabel {
   width: 14vw;
   height: 5.6vh;
-  /* padding-left: 1vh; */
   padding: 1vh 0vw 1vh 1vh;
   border: 2px solid;
   border-radius: 5px;
   background-color: var(--cinzento-claro);
   border-color: var(--cor-principal);
-  /* font-size: 1vh; */
 }
 
 #reviewSelect {
-  color: #63090F; /* Cor do texto */
-  /* background-color: #63090F; */
+  color: #63090F;
   font-weight: bold;
   font-size: 1.8vh;
   font-family:'Segoe UI';
@@ -354,12 +317,6 @@ option {
   flex: 1;
   overflow-y: auto;
   height: 39vh;
-  /* margin-top: 6vh; */
-  /* padding-top: 6vh; */
-  /* width: 100%; */
-  /* padding: 2vh; */
-  /* display: grid; */
-  /* align-items: center; */
   justify-items: center;
   padding-top: 2vh;
 }
@@ -368,24 +325,15 @@ option {
   font-size: 2.2vh;
   width: 95%;
   padding: 8vh 0vw 0vh 0vw;
-  /* display: grid; */
-  /* padding-top: 8vh; */
-  /* width: auto; */
   border-collapse: collapse;
-  /* line-height: 1.5; */
 }
-
 .factsTable th {
   padding-bottom: 0.5vh;
   padding-left: 0.5vw;
   border-bottom: 2px solid #f4f4f4;
   text-align: left;
   font-size: 2vh;
-  
-  /* border-top: 2px solid #f4f4f4; */
-  /* background-color: #63090F; */
 }
-
 .factsTable td {
   text-align: left;
   border-bottom: 1px solid #f4f4f4;
@@ -397,10 +345,10 @@ option {
 }
 
 .commentRev {
-  max-width: 10vw; /* Define um tamanho máximo */
-  word-wrap: break-word; /* Quebra palavras longas */
-  overflow-wrap: break-word; /* Alternativa para compatibilidade */
-  white-space: normal; /* Permite que o texto quebre linhas */
+  max-width: 10vw;
+  word-wrap: break-word;
+  overflow-wrap: break-word;
+  white-space: normal;
 }
 
 .typeRev {
@@ -409,21 +357,16 @@ option {
 
 ::-webkit-scrollbar {
   width: 8px;
-  
 }
-
 ::-webkit-scrollbar-track {
-  background: #b9bbc1; /* Cor do fundo */
-  
-  border-radius: 10px; /* Borda arredondada */
+  background: #b9bbc1;
+  border-radius: 10px;
 }
-
 ::-webkit-scrollbar-thumb {
-  background: #1d2027; /* Cor da barra */
-  border-radius: 10px; /* Borda arredondada */
+  background: #1d2027;
+  border-radius: 10px;
   border: 1px solid #b9bbc1;
 }
-
 ::-webkit-scrollbar-thumb:hover {
   background: #63090F;
 }
@@ -432,11 +375,9 @@ option {
   height:48vh;
   overflow-y: auto;
   padding-left: 8px;
-  /* padding-right: 0.5vw; */
 }
 
 .titReviews {
-  /* padding-top: 1vh; */
   margin: 0;
   margin-top: 5vh;
   font-size: 3vh;
@@ -448,24 +389,15 @@ option {
   font-size: 2.2vh;
   width: 95%;
   padding: 8vh 0vw 0vh 0vw;
-  /* display: grid; */
-  /* padding-top: 8vh; */
-  /* width: auto; */
   border-collapse: collapse;
-  /* line-height: 1.5; */
 }
-
 .factsTable2 th {
   padding-bottom: 0.5vh;
   padding-left: 0.5vw;
   border-bottom: 2px solid #f4f4f4;
   text-align: left;
   font-size: 2vh;
-  
-  /* border-top: 2px solid #f4f4f4; */
-  /* background-color: #63090F; */
 }
-
 .factsTable2 td {
   text-align: left;
   border-bottom: 1px solid #f4f4f4;
