@@ -211,13 +211,21 @@ const ShowClasses: React.FC<ShowClassesProps> = ({ curricularUnitSelected, nameU
                     
                             <div className="divTable4">
                                 <table className="factsTable">
-                                <thead>
-                                    <tr>
-                                        <th>Avaliação</th>
-                                        <th>Comentário</th>
-                                        <th>Categoria</th>
-                                    </tr>
-                                </thead>
+                                {reviews.length > 0 ? (
+                                    <thead>
+                                        <tr>
+                                            <th>Avaliação</th>
+                                            <th>Comentário</th>
+                                            <th>Categoria</th>
+                                        </tr>
+                                    </thead>
+                                ) : (
+                                    <thead>
+                                        <tr>
+                                            <th>Não existem factos nesta aula.</th>
+                                        </tr>
+                                    </thead>
+                                )} 
                                 <tbody>
                                     {reviews.map((review) => (
                                         <tr key={review.id}>
