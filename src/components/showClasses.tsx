@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import { useClasses, deleteClasse, createClasse, updateClasse } from '../hooks/classesHook'
-import Modal from "../modal/modalInfoClassesUser";
+import Modal from "./modalInfoClassesUser";
 import useDecodedToken from "../hooks/tokenHook";
 import { RxInfoCircled, RxCross2 } from "react-icons/rx";
 import { GrConfigure, GrCompliance  } from "react-icons/gr";
